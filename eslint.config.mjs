@@ -30,6 +30,19 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'warn',
       "prettier/prettier": ["error", { endOfLine: "auto" }],
       "@typescript-eslint/no-unsafe-call": 'off',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@nestjs/common',
+              importNames: ['LoggerService'],
+              message:
+                'Do not import LoggerService from @nestjs/common. Use src/infrastructure/logger/logger.service instead.',
+            },
+          ],
+        },
+      ],
     },
   },
 );

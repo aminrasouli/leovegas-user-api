@@ -8,6 +8,7 @@ import { APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core';
 
 import * as configs from 'src/config';
 import { getEnvFilePaths } from 'src/env';
+import { LoggerModule } from 'src/infrastructure/logger/logger.module';
 import { RestApiModule } from 'src/rest-api/rest-api.module';
 
 @Module({
@@ -21,6 +22,7 @@ import { RestApiModule } from 'src/rest-api/rest-api.module';
       skipProcessEnv: false,
       validatePredefined: true,
     }),
+    LoggerModule,
     RestApiModule,
   ],
   providers: [

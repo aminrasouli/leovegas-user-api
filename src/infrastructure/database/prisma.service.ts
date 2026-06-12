@@ -10,6 +10,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import { databaseConfigFactory } from 'src/config';
 import { DatabaseProvider } from 'src/config/database.config';
+import { LoggerService } from 'src/infrastructure/logger/logger.service';
 
 @Injectable()
 export class PrismaService
@@ -19,6 +20,7 @@ export class PrismaService
   constructor(
     @Inject(databaseConfigFactory.KEY)
     private readonly databaseConfig: ConfigType<typeof databaseConfigFactory>,
+    private readonly logger: LoggerService,
   ) {
     const adapters = {
       [DatabaseProvider.POSTGRESQL]: () => {
@@ -32,17 +34,23 @@ export class PrismaService
   async onModuleInit(): Promise<void> {
     await this.$connect();
     await this.ping();
+    this.logger.log(`Database connected: ${this.databaseConfig.provider}`);
   }
 
   async onModuleDestroy(): Promise<void> {
     await this.$disconnect();
+    this.logger.log('Database disconnected');
   }
 
   async ping() {
     try {
       await this.$queryRaw`SELECT 1`;
       return true;
-    } catch {
+    } catch (error) {
+      this.logger.error('Database connection test failed', {
+        provider: this.databaseConfig.provider,
+        error: error as unknown as Error,
+      });
       throw new Error(
         'Failed to connect to the database. Check logs for more details.',
       );
