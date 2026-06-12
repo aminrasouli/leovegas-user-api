@@ -4,6 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { jwtConfigFactory } from 'src/config';
 
+import { TokenService } from './token.service';
+
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -15,5 +17,7 @@ import { jwtConfigFactory } from 'src/config';
       }),
     }),
   ],
+  providers: [TokenService],
+  exports: [TokenService],
 })
 export class TokenModule {}

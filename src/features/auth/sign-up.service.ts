@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/infrastructure/database/prisma.service';
-
 import { HashService } from 'src/infrastructure/hash/hash.service';
+
 import { SignUpInput, SignUpOutput } from './auth.types';
 
 @Injectable()
