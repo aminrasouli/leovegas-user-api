@@ -1,6 +1,9 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
+import {
+  FastifyAdapter,
+  type NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 
 import { AppModule } from 'src/app.module';
 import { LoggerService } from 'src/infrastructure/logger/logger.service';
@@ -10,9 +13,13 @@ async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({});
   //TODO: const fastifyApp = fastifyAdapter.getInstance();
 
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyAdapter, {
-    bufferLogs: true,
-  });
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    fastifyAdapter,
+    {
+      bufferLogs: true,
+    },
+  );
 
   app.enableCors();
 
