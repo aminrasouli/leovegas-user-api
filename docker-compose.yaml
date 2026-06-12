@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    entrypoint:
+      - sh
+      - -c
+      - >
+        export POSTGRES_DB="$${POSTGRES_DATABASE_NAME:?POSTGRES_DATABASE_NAME is required}";
+        exec docker-entrypoint.sh postgres
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'PGPASSWORD="$${POSTGRES_PASSWORD}" psql -h 127.0.0.1 -p 5432 -U "$${POSTGRES_USER}" -d "$${POSTGRES_DATABASE_NAME}" -c "SELECT 1"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres-data:
+    driver: local
