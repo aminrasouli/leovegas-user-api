@@ -1,5 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
 import * as packageJson from '../package.json';
 
 export function createOpenApiDocument(app: INestApplication) {
