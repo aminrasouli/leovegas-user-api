@@ -7,4 +7,4 @@ import { UserController } from './user.controller';
   providers: [],
   controllers: [UserController],
 })
-export class UserModule {}
+export class UserRestModule {}

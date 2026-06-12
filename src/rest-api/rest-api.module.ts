@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
+import { AuthRestModule } from './auth/auth.module';
+import { UserRestModule } from './user/user.module';
 
 @Module({
-  imports: [AuthModule, UserModule],
+  imports: [AuthRestModule, UserRestModule],
   providers: [],
 })
 export class RestApiModule {}
