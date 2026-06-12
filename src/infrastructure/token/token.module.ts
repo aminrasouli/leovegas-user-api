@@ -7,7 +7,8 @@ import { jwtConfigFactory } from 'src/config';
 @Module({
   imports: [
     JwtModule.registerAsync({
-      inject: [jwtConfigFactory.asProvider()],
+      imports: jwtConfigFactory.asProvider().imports,
+      inject: [jwtConfigFactory.KEY],
       useFactory: (jwtConfig: ConfigType<typeof jwtConfigFactory>) => ({
         secret: jwtConfig.secretKey,
         signOptions: { expiresIn: jwtConfig.expiresIn },

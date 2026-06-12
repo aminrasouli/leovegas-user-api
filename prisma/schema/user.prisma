@@ -3,9 +3,8 @@ enum Role {
   ADMIN
 }
 
-
 model User {
-  id           String   @id @default(uuid())
+  id           Int      @id @default(autoincrement())
   name         String
   email        String   @unique
   password     String

@@ -4,7 +4,6 @@ import { UserController } from './user.controller';
 
 @Module({
   imports: [],
-  providers: [],
   controllers: [UserController],
 })
 export class UserRestModule {}

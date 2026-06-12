@@ -18,7 +18,7 @@ export class ContextService {
       requestId: req.id,
       requestIp: req.ip,
       userAgent: headers['user-agent'] ?? '',
-      userUrl: req.originalUrl || req.url,
+      endpoint: req.originalUrl || req.url,
     });
 
     return await this.als.run(store, next);
