@@ -1,13 +1,18 @@
-import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Module,
+  ValidationPipe,
+} from '@nestjs/common';
 import { APP_PIPE, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import { RestApiModule } from 'src/rest-api/rest-api.module';
 
 @Module({
   imports: [RestApiModule],
   providers: [
-    { 
+    {
       provide: APP_PIPE,
-      useValue: new ValidationPipe({ transform: true, whitelist: true }) },
+      useValue: new ValidationPipe({ transform: true, whitelist: true }),
+    },
     {
       provide: APP_INTERCEPTOR,
       inject: [Reflector],
