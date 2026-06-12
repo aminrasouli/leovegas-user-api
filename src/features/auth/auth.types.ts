@@ -6,5 +6,4 @@ export type SignUpInput = {
 
 export type SignUpOutput = {
   id: number;
-  accessToken: string;
 };

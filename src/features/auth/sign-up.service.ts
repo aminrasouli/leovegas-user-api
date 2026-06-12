@@ -2,11 +2,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/infrastructure/database/prisma.service';
 
+import { HashService } from 'src/infrastructure/hash/hash.service';
 import { SignUpInput, SignUpOutput } from './auth.types';
 
 @Injectable()
 export class SignUpService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly hashService: HashService,
+  ) {}
 
   async signUp(body: SignUpInput): Promise<SignUpOutput> {
     const existingUser = await this.prismaService.user.findUnique({
@@ -21,15 +25,12 @@ export class SignUpService {
       data: {
         email: body.email,
         name: body.name,
-        password: body.password,
+        password: await this.hashService.hash(body.password),
       },
     });
 
-    const accessToken = 'dummy-access-token';
-
     return {
       id: user.id,
-      accessToken,
     };
   }
 }
