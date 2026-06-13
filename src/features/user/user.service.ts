@@ -32,6 +32,9 @@ export class UserService {
   ) {}
 
   async create(data: CreateUserInput): Promise<UserModel> {
+    // We skip manual unique email check because it's handled at the DB level.
+    // Prisma will throw a unique constraint error (P2002) if the email exists,
+    // which is caught and handled by our global PrismaExceptionFilter.
     return this.prismaService.user.create({
       data: {
         email: data.email,
