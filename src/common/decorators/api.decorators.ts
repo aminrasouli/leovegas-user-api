@@ -73,9 +73,10 @@ export function JsonApiResponse<T>(
       data: DataDto[];
 
       @Expose()
-      @ApiProperty({ type: MetaDto })
+      @ApiProperty({ type: MetaDto, required: false })
       @Type(() => MetaDto)
-      meta: MetaDto;
+      @Transform(({ obj }) => obj?.meta)
+      meta?: MetaDto;
     }
     type = JsonApiDto;
   } else {

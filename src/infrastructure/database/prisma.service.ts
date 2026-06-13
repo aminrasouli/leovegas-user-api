@@ -11,6 +11,8 @@ import { PrismaClient } from '@prisma/client';
 import { databaseConfigFactory } from 'src/config';
 import { DatabaseProvider } from 'src/config/database.config';
 import { LoggerService } from 'src/infrastructure/logger/logger.service';
+import { PageOptionsDto } from 'src/common/dto/page-options.dto';
+import { PaginatedResult } from 'src/common/types/pagination.types';
 
 @Injectable()
 export class PrismaService
@@ -55,5 +57,29 @@ export class PrismaService
         'Failed to connect to the database. Check logs for more details.',
       );
     }
+  }
+
+  async paginate<T>(
+    delegate: any,
+    args: any,
+    options: PageOptionsDto,
+  ): Promise<PaginatedResult<T>> {
+    const [totalItems, data] = await this.$transaction([
+      delegate.count({ where: args.where }),
+      delegate.findMany({
+        ...args,
+        skip: options.skip,
+        take: options.limit,
+      }),
+    ]);
+
+    return {
+      data,
+      meta: {
+        totalItems,
+        totalPages: Math.ceil(totalItems / options.limit),
+        currentPage: options.page,
+      },
+    };
   }
 }
