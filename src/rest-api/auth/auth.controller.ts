@@ -4,10 +4,10 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  SerializeOptions,
 } from '@nestjs/common';
 
 import { AuthService } from 'src/features/auth/auth.service';
+import { JsonApiResponse } from 'src/common/decorators/api.decorators';
 
 import { SignInBodyDto, SignUpBodyDto } from './auth.dto.request';
 import { SignInResponseDto, SignUpResponseDto } from './auth.dto.response';
@@ -17,14 +17,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('sign-up')
-  @SerializeOptions({ type: SignUpResponseDto })
+  @JsonApiResponse(SignUpResponseDto)
   async signUp(@Body() body: SignUpBodyDto): Promise<SignUpResponseDto> {
     return this.authService.signUp(body);
   }
 
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
-  @SerializeOptions({ type: SignInResponseDto })
+  @JsonApiResponse(SignInResponseDto)
   async signIn(@Body() body: SignInBodyDto): Promise<SignInResponseDto> {
     return this.authService.signIn(body);
   }

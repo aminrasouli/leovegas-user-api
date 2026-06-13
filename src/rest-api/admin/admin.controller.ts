@@ -8,13 +8,13 @@ import {
   HttpStatus,
   Param,
   Patch,
-  SerializeOptions,
 } from '@nestjs/common';
 
 import { Auth, User } from 'src/features/auth/auth.decorators';
 import { UserRole } from 'src/features/user/user.constants';
 import { UserService } from 'src/features/user/user.service';
 import { UserResponseDto } from 'src/rest-api/user/user.dto.response';
+import { JsonApiResponse } from 'src/common/decorators/api.decorators';
 
 import {
   AdminUpdateUserBodyDto,
@@ -27,13 +27,13 @@ export class AdminController {
   constructor(private readonly userService: UserService) {}
 
   @Get('users')
-  @SerializeOptions({ type: UserResponseDto })
+  @JsonApiResponse([UserResponseDto])
   async getUsers(): Promise<UserResponseDto[]> {
     return this.userService.findMany();
   }
 
   @Get('users/:id')
-  @SerializeOptions({ type: UserResponseDto })
+  @JsonApiResponse(UserResponseDto)
   async getUser(
     @Param() params: AdminUserIdParamDto,
   ): Promise<UserResponseDto> {
@@ -41,7 +41,7 @@ export class AdminController {
   }
 
   @Patch('users/:id')
-  @SerializeOptions({ type: UserResponseDto })
+  @JsonApiResponse(UserResponseDto)
   async updateUser(
     @Param() params: AdminUserIdParamDto,
     @Body() body: AdminUpdateUserBodyDto,
