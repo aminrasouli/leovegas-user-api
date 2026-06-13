@@ -38,7 +38,7 @@ export class AuthService {
       password: body.password,
     });
 
-    const accessToken = this.tokenService.generateToken({ id: user.id });
+    const accessToken = this.tokenService.generate({ id: user.id });
 
     return {
       id: user.id,

@@ -32,7 +32,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid authorization header');
     }
 
-    const { id } = (await this.tokenService.verifyToken(token.trim())) ?? {};
+    const { id } = (await this.tokenService.verify(token.trim())) ?? {};
     if (!id) {
       throw new UnauthorizedException('Invalid token');
     }
