@@ -4,7 +4,7 @@ export type CreateUserInput = Prisma.Prisma.UserCreateInput;
 
 export type UpdateUserInput = Omit<
   Prisma.Prisma.UserUpdateInput,
-  'role' | 'createdAt' | 'updatedAt'
+  'createdAt' | 'updatedAt'
 >;
 
 export type UserModel = Omit<Prisma.User, 'password'>;

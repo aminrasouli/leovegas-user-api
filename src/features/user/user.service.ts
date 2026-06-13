@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 
@@ -22,9 +23,9 @@ export class UserService {
     private readonly hashService: HashService,
   ) {}
 
-  async create(body: CreateUserInput): Promise<UserModel> {
+  async create(data: CreateUserInput): Promise<UserModel> {
     const existingUser = await this.prismaService.user.findUnique({
-      where: { email: body.email },
+      where: { email: data.email },
     });
 
     if (existingUser) {
@@ -33,46 +34,18 @@ export class UserService {
 
     return this.prismaService.user.create({
       data: {
-        email: body.email,
-        name: body.name,
-        password: await this.hashService.hash(body.password),
-        role: body.role,
+        email: data.email,
+        name: data.name,
+        password: await this.hashService.hash(data.password),
+        role: data.role,
       },
       omit: { password: true },
     });
   }
 
-  async validate(body: ValidateUserInput): Promise<ValidateUserOutput> {
-    const user = await this.prismaService.user.findUnique({
-      where: { email: body.email },
-    });
-
-    if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
-
-    const { password, ...userWithoutPassword } = user;
-
-    const isPasswordValid = await this.hashService.compare(
-      body.password,
-      password,
-    );
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
-
-    return userWithoutPassword;
-  }
-
-  async findById(id: number): Promise<UserModel | null> {
-    return this.prismaService.user.findUnique({
-      where: { id },
-      omit: { password: true },
-    });
-  }
-
   async update(id: number, data: UpdateUserInput): Promise<UserModel> {
+    await this.findById(id);
+
     const updateData: UpdateUserInput = { ...data };
 
     if (data.email && typeof data.email === 'string') {
@@ -97,5 +70,56 @@ export class UserService {
       data: updateData,
       omit: { password: true },
     });
+  }
+
+  async findById(id: number): Promise<UserModel> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      omit: { password: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return user;
+  }
+
+  async findMany(): Promise<UserModel[]> {
+    return this.prismaService.user.findMany({
+      omit: { password: true },
+    });
+  }
+
+  async delete(id: number): Promise<UserModel> {
+    await this.findById(id);
+
+    return this.prismaService.user.delete({
+      where: { id },
+      omit: { password: true },
+    });
+  }
+
+  async validate(data: ValidateUserInput): Promise<ValidateUserOutput> {
+    const user = await this.prismaService.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const { password, ...userWithoutPassword } = user;
+
+    const isPasswordValid = await this.hashService.compare(
+      data.password,
+      password,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    return userWithoutPassword;
   }
 }
