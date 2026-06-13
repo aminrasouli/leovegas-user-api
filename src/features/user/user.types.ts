@@ -1,8 +1,11 @@
 import { Prisma } from 'src/infrastructure/database/prisma.types';
 
-// TODO: fix types
-
 export type CreateUserInput = Prisma.Prisma.UserCreateInput;
+
+export type UpdateUserInput = Omit<
+  Prisma.Prisma.UserUpdateInput,
+  'role' | 'createdAt' | 'updatedAt'
+>;
 
 export type UserModel = Omit<Prisma.User, 'password'>;
 
