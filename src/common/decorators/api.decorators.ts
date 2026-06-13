@@ -48,6 +48,29 @@ export function JsonApiResponse<T>(
     attributes: AttributesDto;
   }
 
+  @ApiSchema({ name: `${classRef.name}Links` })
+  class LinksDto {
+    @Expose()
+    @ApiProperty()
+    self: string;
+
+    @Expose()
+    @ApiProperty()
+    first: string;
+
+    @Expose()
+    @ApiProperty({ nullable: true })
+    prev: string | null;
+
+    @Expose()
+    @ApiProperty({ nullable: true })
+    next: string | null;
+
+    @Expose()
+    @ApiProperty()
+    last: string;
+  }
+
   @ApiSchema({ name: `${classRef.name}Meta` })
   class MetaDto {
     @Expose()
@@ -60,7 +83,11 @@ export function JsonApiResponse<T>(
 
     @Expose()
     @ApiProperty()
-    currentPage: number;
+    pageNumber: number;
+
+    @Expose()
+    @ApiProperty()
+    pageSize: number;
   }
 
   if (isArray) {
@@ -71,6 +98,12 @@ export function JsonApiResponse<T>(
       @Type(() => DataDto)
       @Transform(({ obj }) => obj?.data ?? obj)
       data: DataDto[];
+
+      @Expose()
+      @ApiProperty({ type: LinksDto, required: false })
+      @Type(() => LinksDto)
+      @Transform(({ obj }) => obj?.links)
+      links?: LinksDto;
 
       @Expose()
       @ApiProperty({ type: MetaDto, required: false })
@@ -87,6 +120,12 @@ export function JsonApiResponse<T>(
       @Type(() => DataDto)
       @Transform(({ obj }) => obj?.data ?? obj)
       data: DataDto;
+
+      @Expose()
+      @ApiProperty({ type: LinksDto, required: false })
+      @Type(() => LinksDto)
+      @Transform(({ obj }) => obj?.links)
+      links?: LinksDto;
     }
     type = JsonApiDto;
   }

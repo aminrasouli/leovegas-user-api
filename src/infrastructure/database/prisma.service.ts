@@ -73,12 +73,22 @@ export class PrismaService
       }),
     ]);
 
+    const totalPages = Math.ceil(totalItems / options.limit);
+
     return {
       data,
+      links: {
+        self: '',
+        first: '',
+        prev: null,
+        next: null,
+        last: '',
+      },
       meta: {
         totalItems,
-        totalPages: Math.ceil(totalItems / options.limit),
-        currentPage: options.page,
+        totalPages,
+        pageNumber: options.pageNumber,
+        pageSize: options.limit,
       },
     };
   }
