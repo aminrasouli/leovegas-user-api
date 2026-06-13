@@ -6,6 +6,7 @@ import {
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core';
 
 import { AppCommonModule } from 'src/app-common.module';
+import { AppController } from 'src/app.controller';
 import { ExceptionLoggerFilter } from 'src/common/filters/exception-logger.filter';
 import { PrismaExceptionFilter } from 'src/common/filters/prisma-exception.filter';
 import { JsonApiInterceptor } from 'src/common/interceptors/json-api.interceptor';
@@ -15,6 +16,7 @@ import { RestApiModule } from 'src/rest-api/rest-api.module';
 
 @Module({
   imports: [AppCommonModule, ContextModule, RestApiModule],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_PIPE,
