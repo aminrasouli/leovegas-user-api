@@ -2,6 +2,7 @@ import { type ArgumentsHost, Catch, Inject } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { BaseExceptionFilter } from '@nestjs/core';
 
+import { sanitize } from 'src/common/utils/sanitize';
 import { globalConfigFactory } from 'src/config';
 import { LoggerService } from 'src/infrastructure/logger/logger.service';
 
@@ -16,15 +17,9 @@ export class ExceptionLoggerFilter extends BaseExceptionFilter {
   }
 
   catch(exception: unknown, host: ArgumentsHost) {
-    // TODO: skip logging in production to avoid sensitive data exposure until we sanitize logs sensitive data
-    const isProduction = this.globalConfig.isProduction;
-
-    if (!isProduction) {
-      this.logger.error({
-        // TODO:Filter it later
-        exception,
-      });
-    }
+    this.logger.error({
+      exception: sanitize(exception),
+    });
 
     super.catch(exception, host);
   }

@@ -11,13 +11,13 @@ import {
   Query,
 } from '@nestjs/common';
 
+import { JsonApiResponse } from 'src/common/decorators/api.decorators';
+import { PageOptionsDto } from 'src/common/dto/page-options.dto';
+import { PaginatedResult } from 'src/common/types/pagination.types';
 import { Auth, User } from 'src/features/auth/auth.decorators';
 import { UserRole } from 'src/features/user/user.constants';
 import { UserService } from 'src/features/user/user.service';
 import { UserResponseDto } from 'src/rest-api/user/user.dto.response';
-import { JsonApiResponse } from 'src/common/decorators/api.decorators';
-import { PageOptionsDto } from 'src/common/dto/page-options.dto';
-import { PaginatedResult } from 'src/common/types/pagination.types';
 
 import {
   AdminUpdateUserBodyDto,

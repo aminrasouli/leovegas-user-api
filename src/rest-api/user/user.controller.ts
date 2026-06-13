@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
 
+import { JsonApiResponse } from 'src/common/decorators/api.decorators';
 import { Auth, User } from 'src/features/auth/auth.decorators';
 import { UserRole } from 'src/features/user/user.constants';
 import { UserService } from 'src/features/user/user.service';
-import { JsonApiResponse } from 'src/common/decorators/api.decorators';
 
 import { UpdateUserBodyDto } from './user.dto.request';
 import { UserResponseDto } from './user.dto.response';

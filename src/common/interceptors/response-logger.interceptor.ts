@@ -9,6 +9,7 @@ import { type ConfigType } from '@nestjs/config';
 
 import type { FastifyReply } from 'fastify';
 import { Observable, tap } from 'rxjs';
+import { sanitize } from 'src/common/utils/sanitize';
 import { globalConfigFactory } from 'src/config';
 import { LoggerService } from 'src/infrastructure/logger/logger.service';
 
@@ -21,9 +22,6 @@ export class ResponseLoggerInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    // TODO: skip logging in production to avoid sensitive data exposure until we sanitize logs sensitive data
-    if (this.globalConfig.isProduction) return next.handle();
-
     if (context.getType() !== 'http') return next.handle();
 
     const host = context.switchToHttp();
@@ -39,7 +37,7 @@ export class ResponseLoggerInterceptor implements NestInterceptor {
           type: 'http_response',
           durationMs,
           statusCode: res.statusCode,
-          responseBody: responseBody,
+          responseBody: sanitize(responseBody),
         });
       }),
     );

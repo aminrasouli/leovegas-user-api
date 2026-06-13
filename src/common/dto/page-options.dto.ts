@@ -1,4 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+
 import { Transform, Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min, ValidateNested } from 'class-validator';
 
@@ -24,11 +25,13 @@ export class PageOptionsDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => PageDto)
-  @Transform(({ obj }) => {
+  @Transform(({ obj }: { obj: Record<string, unknown> }) => {
     // Handle both nested object and flat keys like page[number]
     const page = {
-      number: obj['page[number]'] ?? obj?.page?.number ?? 1,
-      size: obj['page[size]'] ?? obj?.page?.size ?? 10,
+      number: (obj['page[number]'] ??
+        (obj?.page as PageDto)?.number ??
+        1) as number,
+      size: (obj['page[size]'] ?? (obj?.page as PageDto)?.size ?? 10) as number,
     };
     return {
       number: Number(page.number),

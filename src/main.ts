@@ -11,7 +11,6 @@ import { createOpenApiDocument } from 'src/openapi';
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({});
-  //TODO: const fastifyApp = fastifyAdapter.getInstance();
 
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,

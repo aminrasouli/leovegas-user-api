@@ -7,12 +7,22 @@ import {
 import { type ConfigType } from '@nestjs/config';
 
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PageOptionsDto } from 'src/common/dto/page-options.dto';
+import { PaginatedResult } from 'src/common/types/pagination.types';
 import { databaseConfigFactory } from 'src/config';
 import { DatabaseProvider } from 'src/config/database.config';
 import { LoggerService } from 'src/infrastructure/logger/logger.service';
-import { PageOptionsDto } from 'src/common/dto/page-options.dto';
-import { PaginatedResult } from 'src/common/types/pagination.types';
+
+interface PrismaDelegate<T, A> {
+  count(args?: { where?: A }): Prisma.PrismaPromise<number>;
+  findMany(args?: {
+    where?: A;
+    skip?: number;
+    take?: number;
+    [key: string]: unknown;
+  }): Prisma.PrismaPromise<T[]>;
+}
 
 @Injectable()
 export class PrismaService
@@ -59,9 +69,9 @@ export class PrismaService
     }
   }
 
-  async paginate<T>(
-    delegate: any,
-    args: any,
+  async paginate<T, A>(
+    delegate: PrismaDelegate<T, A>,
+    args: { where?: A; [key: string]: unknown },
     options: PageOptionsDto,
   ): Promise<PaginatedResult<T>> {
     const [totalItems, data] = await this.$transaction([

@@ -33,18 +33,20 @@ export function JsonApiResponse<T>(
   class DataDto {
     @Expose()
     @ApiProperty()
-    @Transform(({ obj }) => obj?.id)
+    @Transform(({ obj }: { obj: Record<string, unknown> }) => obj?.id)
     id: string;
 
     @Expose()
     @ApiProperty()
-    @Transform(({ obj }) => obj?.type || classRef.name)
+    @Transform(
+      ({ obj }: { obj: Record<string, unknown> }) => obj?.type || classRef.name,
+    )
     type: string;
 
     @Expose()
     @ApiProperty({ type: AttributesDto })
     @Type(() => AttributesDto)
-    @Transform(({ obj }) => ({ ...obj }))
+    @Transform(({ obj }: { obj: Record<string, unknown> }) => ({ ...obj }))
     attributes: AttributesDto;
   }
 
@@ -96,19 +98,22 @@ export function JsonApiResponse<T>(
       @Expose()
       @ApiProperty({ type: [DataDto] })
       @Type(() => DataDto)
-      @Transform(({ obj }) => obj?.data ?? obj)
+      @Transform(
+        ({ obj }: { obj: Record<string, unknown> }) =>
+          (obj?.data as DataDto[]) ?? obj,
+      )
       data: DataDto[];
 
       @Expose()
       @ApiProperty({ type: LinksDto, required: false })
       @Type(() => LinksDto)
-      @Transform(({ obj }) => obj?.links)
+      @Transform(({ obj }: { obj: Record<string, unknown> }) => obj?.links)
       links?: LinksDto;
 
       @Expose()
       @ApiProperty({ type: MetaDto, required: false })
       @Type(() => MetaDto)
-      @Transform(({ obj }) => obj?.meta)
+      @Transform(({ obj }: { obj: Record<string, unknown> }) => obj?.meta)
       meta?: MetaDto;
     }
     type = JsonApiDto;
@@ -118,13 +123,16 @@ export function JsonApiResponse<T>(
       @Expose()
       @ApiProperty({ type: DataDto })
       @Type(() => DataDto)
-      @Transform(({ obj }) => obj?.data ?? obj)
+      @Transform(
+        ({ obj }: { obj: Record<string, unknown> }) =>
+          (obj?.data as DataDto) ?? obj,
+      )
       data: DataDto;
 
       @Expose()
       @ApiProperty({ type: LinksDto, required: false })
       @Type(() => LinksDto)
-      @Transform(({ obj }) => obj?.links)
+      @Transform(({ obj }: { obj: Record<string, unknown> }) => obj?.links)
       links?: LinksDto;
     }
     type = JsonApiDto;

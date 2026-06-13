@@ -4,10 +4,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { PrismaService } from 'src/infrastructure/database/prisma.service';
-import { HashService } from 'src/infrastructure/hash/hash.service';
 import { PageOptionsDto } from 'src/common/dto/page-options.dto';
 import { PaginatedResult } from 'src/common/types/pagination.types';
+import { PrismaService } from 'src/infrastructure/database/prisma.service';
+import { HashService } from 'src/infrastructure/hash/hash.service';
 
 import {
   CreateUserInput,

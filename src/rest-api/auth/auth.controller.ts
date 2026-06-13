@@ -1,13 +1,7 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 
-import { AuthService } from 'src/features/auth/auth.service';
 import { JsonApiResponse } from 'src/common/decorators/api.decorators';
+import { AuthService } from 'src/features/auth/auth.service';
 
 import { SignInBodyDto, SignUpBodyDto } from './auth.dto.request';
 import { SignInResponseDto, SignUpResponseDto } from './auth.dto.response';
