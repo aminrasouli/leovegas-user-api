@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 
 import { UserService } from 'src/features/user/user.service';
+import { UserModel } from 'src/features/user/user.types';
 import { TokenService } from 'src/infrastructure/token/token.service';
 
 @Injectable()
@@ -16,9 +17,12 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<{
+      headers: Record<string, string | string[] | undefined>;
+      user?: UserModel;
+    }>();
     const header = request.headers['authorization'];
-    if (!header) {
+    if (!header || typeof header !== 'string') {
       throw new UnauthorizedException('Authorization header is missing');
     }
 

@@ -1,7 +1,6 @@
 import {
   type ExecutionContext,
   InternalServerErrorException,
-  SetMetadata,
   UseGuards,
   applyDecorators,
   createParamDecorator,
@@ -26,7 +25,9 @@ export const User = createParamDecorator(
 
 export function Auth(...roles: UserRole[]) {
   if (roles.length <= 0) {
-    throw new InternalServerErrorException('At least one role must be specified for @Auth decorator');
+    throw new InternalServerErrorException(
+      'At least one role must be specified for @Auth decorator',
+    );
   }
 
   const decorators = [

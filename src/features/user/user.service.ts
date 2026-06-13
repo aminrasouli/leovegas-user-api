@@ -37,7 +37,7 @@ export class UserService {
         password: await this.hashService.hash(body.password),
         role: body.role,
       },
-      select: { id: true, email: true, name: true, role: true },
+      omit: { password: true },
     });
   }
 
@@ -50,27 +50,24 @@ export class UserService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    const { password, ...userWithoutPassword } = user;
+
     const isPasswordValid = await this.hashService.compare(
       body.password,
-      user.password,
+      password,
     );
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-    };
+    return userWithoutPassword;
   }
 
   async findById(id: number): Promise<UserModel | null> {
     return this.prismaService.user.findUnique({
       where: { id },
-      select: { id: true, email: true, name: true, role: true },
+      omit: { password: true },
     });
   }
 }
