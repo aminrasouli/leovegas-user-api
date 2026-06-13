@@ -35,8 +35,9 @@ export class UserService {
         email: body.email,
         name: body.name,
         password: await this.hashService.hash(body.password),
+        role: body.role,
       },
-      select: { id: true, email: true, name: true },
+      select: { id: true, email: true, name: true, role: true },
     });
   }
 

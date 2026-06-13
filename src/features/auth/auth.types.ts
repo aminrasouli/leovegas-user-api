@@ -4,7 +4,7 @@ import type {
   ValidateUserInput,
 } from 'src/features/user/user.types';
 
-export type SignUpInput = CreateUserInput;
+export type SignUpInput = Omit<CreateUserInput, 'role'>;
 
 export type SignUpOutput = Pick<UserModel, 'id'>;
 

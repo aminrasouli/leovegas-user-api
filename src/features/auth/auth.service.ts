@@ -9,6 +9,7 @@ import {
   SignUpInput,
   SignUpOutput,
 } from './auth.types';
+import { UserRole } from 'src/features/user/user.constants';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,7 @@ export class AuthService {
       name: body.name,
       // Password is hashed in the user service, so we can pass it directly
       password: body.password,
+      role: UserRole.USER,
     });
 
     return {

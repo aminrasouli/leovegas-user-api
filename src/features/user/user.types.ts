@@ -1,6 +1,9 @@
 import { Prisma } from 'src/infrastructure/database/prisma.types';
 
-export type CreateUserInput = Pick<Prisma.User, 'email' | 'name' | 'password'>;
+export type CreateUserInput = Pick<
+  Prisma.User,
+  'email' | 'name' | 'password' | 'role'
+>;
 
 export type UserModel = Pick<Prisma.User, 'id' | 'email' | 'name'>;
 
