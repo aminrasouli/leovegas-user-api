@@ -10,8 +10,6 @@ import { LoggerService } from 'src/infrastructure/logger/logger.service';
 export class ExceptionLoggerFilter extends BaseExceptionFilter {
   constructor(
     private readonly logger: LoggerService,
-    @Inject(globalConfigFactory.KEY)
-    private readonly globalConfig: ConfigType<typeof globalConfigFactory>,
   ) {
     super();
   }

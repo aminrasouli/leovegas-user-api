@@ -17,8 +17,6 @@ import { LoggerService } from 'src/infrastructure/logger/logger.service';
 export class ResponseLoggerInterceptor implements NestInterceptor {
   public constructor(
     private readonly logger: LoggerService,
-    @Inject(globalConfigFactory.KEY)
-    private readonly globalConfig: ConfigType<typeof globalConfigFactory>,
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
@@ -26,8 +24,6 @@ export class ResponseLoggerInterceptor implements NestInterceptor {
 
     const host = context.switchToHttp();
     const res = host.getResponse<FastifyReply>();
-    //const req = host.getRequest<FastifyRequest>();
-
     const startedAt = process.hrtime.bigint();
     return next.handle().pipe(
       tap((responseBody: unknown) => {

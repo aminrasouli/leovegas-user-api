@@ -14,11 +14,6 @@ export class JsonApiExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
 
-    // If response was already sent by another filter (like PrismaExceptionFilter), do nothing
-    if (response.sent) {
-      return;
-    }
-
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message: string | string[] = 'Internal server error';
     let error = 'Internal Server Error';
