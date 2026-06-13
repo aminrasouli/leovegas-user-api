@@ -8,7 +8,7 @@ import { UpdateUserBodyDto } from './user.dto.request';
 import { UserResponseDto } from './user.dto.response';
 
 @Controller('user')
-@Auth(UserRole.USER)
+@Auth(UserRole.USER, UserRole.ADMIN)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

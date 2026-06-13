@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
@@ -32,5 +33,6 @@ export class AdminUpdateUserBodyDto implements UpdateUserInput {
 export class AdminUserIdParamDto {
   @IsNotEmpty()
   @IsInt()
+  @Type(() => Number)
   id: number;
 }

@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   SerializeOptions,
@@ -48,15 +50,15 @@ export class AdminController {
   }
 
   @Delete('users/:id')
-  @SerializeOptions({ type: UserResponseDto })
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(
     @User() currentUser: User,
     @Param() params: AdminUserIdParamDto,
-  ): Promise<UserResponseDto> {
+  ): Promise<void> {
     if (currentUser.id === params.id) {
       throw new BadRequestException('You cannot delete your own account');
     }
 
-    return this.userService.delete(params.id);
+    await this.userService.delete(params.id);
   }
 }

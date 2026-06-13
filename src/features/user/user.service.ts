@@ -15,6 +15,13 @@ import {
   ValidateUserOutput,
 } from './user.types';
 
+/**
+ * Error Handling:
+ * Most database-related errors (such as unique constraint violations on email or
+ * record not found during update/delete) are handled globally by the
+ * `PrismaExceptionFilter` in `src/common/filters/prisma-exception.filter.ts`.
+ * This avoids repetitive try-catch blocks within the service methods.
+ */
 @Injectable()
 export class UserService {
   constructor(
