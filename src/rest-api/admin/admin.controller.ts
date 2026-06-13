@@ -14,7 +14,10 @@ import { UserRole } from 'src/features/user/user.constants';
 import { UserService } from 'src/features/user/user.service';
 import { UserResponseDto } from 'src/rest-api/user/user.dto.response';
 
-import { AdminUpdateUserBodyDto, AdminUserIdParamDto } from './admin.dto.request';
+import {
+  AdminUpdateUserBodyDto,
+  AdminUserIdParamDto,
+} from './admin.dto.request';
 
 @Controller('admin')
 @Auth(UserRole.ADMIN)
@@ -29,7 +32,9 @@ export class AdminController {
 
   @Get('users/:id')
   @SerializeOptions({ type: UserResponseDto })
-  async getUser(@Param() params: AdminUserIdParamDto): Promise<UserResponseDto> {
+  async getUser(
+    @Param() params: AdminUserIdParamDto,
+  ): Promise<UserResponseDto> {
     return this.userService.findById(params.id);
   }
 

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -24,14 +23,6 @@ export class UserService {
   ) {}
 
   async create(data: CreateUserInput): Promise<UserModel> {
-    const existingUser = await this.prismaService.user.findUnique({
-      where: { email: data.email },
-    });
-
-    if (existingUser) {
-      throw new BadRequestException('User with this email already exists');
-    }
-
     return this.prismaService.user.create({
       data: {
         email: data.email,
@@ -44,22 +35,7 @@ export class UserService {
   }
 
   async update(id: number, data: UpdateUserInput): Promise<UserModel> {
-    await this.findById(id);
-
     const updateData: UpdateUserInput = { ...data };
-
-    if (data.email && typeof data.email === 'string') {
-      const existingUser = await this.prismaService.user.findFirst({
-        where: {
-          email: data.email,
-          id: { not: id },
-        },
-      });
-
-      if (existingUser) {
-        throw new BadRequestException('User with this email already exists');
-      }
-    }
 
     if (data.password && typeof data.password === 'string') {
       updateData.password = await this.hashService.hash(data.password);
@@ -92,8 +68,6 @@ export class UserService {
   }
 
   async delete(id: number): Promise<UserModel> {
-    await this.findById(id);
-
     return this.prismaService.user.delete({
       where: { id },
       omit: { password: true },

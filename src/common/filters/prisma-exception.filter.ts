@@ -15,6 +15,11 @@ import {
   PrismaClientValidationError,
 } from '@prisma/client/runtime/client';
 
+enum PrismaError {
+  UniqueConstraintFailed = 'P2002',
+  RecordNotFound = 'P2025',
+}
+
 const PRISMA_ERROR_MAP: Record<
   string,
   { status: HttpStatus; message: string }
@@ -45,8 +50,14 @@ const PRISMA_KNOWN_ERROR_MAP: Record<
   string,
   { status: HttpStatus; message: string }
 > = {
-  P2002: { status: HttpStatus.CONFLICT, message: 'Unique constraint failed' },
-  P2025: { status: HttpStatus.NOT_FOUND, message: 'Record not found' },
+  [PrismaError.UniqueConstraintFailed]: {
+    status: HttpStatus.CONFLICT,
+    message: 'Unique constraint failed',
+  },
+  [PrismaError.RecordNotFound]: {
+    status: HttpStatus.NOT_FOUND,
+    message: 'Record not found',
+  },
 };
 
 @Catch(
@@ -65,10 +76,24 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     };
 
     if (exception instanceof PrismaClientKnownRequestError) {
-      const knownError = PRISMA_KNOWN_ERROR_MAP[exception.code];
+      const errorCode = exception.code as PrismaError;
+      const knownError = PRISMA_KNOWN_ERROR_MAP[errorCode];
       if (knownError) {
         statusCode = knownError.status;
         message = knownError.message;
+
+        if (
+          errorCode === PrismaError.UniqueConstraintFailed &&
+          exception.meta?.target
+        ) {
+          const target = exception.meta.target as string | string[];
+          message = `Unique constraint failed on field(s): ${Array.isArray(target) ? target.join(', ') : target}`;
+        } else if (
+          errorCode === PrismaError.RecordNotFound &&
+          (exception.meta?.cause || exception.meta?.message)
+        ) {
+          message = (exception.meta.cause || exception.meta.message) as string;
+        }
       }
     }
 
@@ -76,7 +101,7 @@ export class PrismaExceptionFilter implements ExceptionFilter {
       {
         statusCode,
         message,
-        error: errorType,
+        error: 'database_error',
       },
       statusCode,
       { cause: exception, description: errorType },
