@@ -8,6 +8,7 @@ import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core';
 
 import * as configs from 'src/config';
 import { ExceptionLoggerFilter } from 'src/common/filters/exception-logger.filter';
+import { PrismaExceptionFilter } from 'src/common/filters/prisma-exception.filter';
 import { ResponseLoggerInterceptor } from 'src/common/interceptors/response-logger.interceptor';
 import { getEnvFilePaths } from 'src/env';
 import { ContextModule } from 'src/infrastructure/context/context.module';
@@ -36,6 +37,8 @@ import { RestApiModule } from 'src/rest-api/rest-api.module';
     },
 
     { provide: APP_FILTER, useClass: ExceptionLoggerFilter },
+
+    { provide: APP_FILTER, useClass: PrismaExceptionFilter },
 
     { provide: APP_INTERCEPTOR, useClass: ResponseLoggerInterceptor },
     {
