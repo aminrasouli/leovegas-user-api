@@ -14,13 +14,13 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('')
-  @JsonApiResponse(UserResponseDto)
+  @JsonApiResponse(UserResponseDto, { resource: 'users' })
   public getUser(@User() user: User): UserResponseDto {
     return user;
   }
 
   @Patch('')
-  @JsonApiResponse(UserResponseDto)
+  @JsonApiResponse(UserResponseDto, { resource: 'users' })
   public async updateUser(
     @User() user: User,
     @Body() body: UpdateUserBodyDto,

@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PageOptionsDto } from 'src/common/dto/page-options.dto';
@@ -65,12 +65,23 @@ describe('AdminController', () => {
 
   describe('updateUser', () => {
     it('should update a user', async () => {
+      const currentUser = { id: 2 } as unknown as UserModel;
       const body = { name: 'Updated' };
       const updatedUser = { id: 1, ...body };
       mockUserService.update.mockResolvedValue(updatedUser);
 
-      expect(await controller.updateUser({ id: 1 }, body)).toEqual(updatedUser);
+      expect(await controller.updateUser(currentUser, { id: 1 }, body)).toEqual(
+        updatedUser,
+      );
       expect(mockUserService.update).toHaveBeenCalledWith(1, body);
+    });
+
+    it('should throw ForbiddenException if updating self via admin endpoint', async () => {
+      const currentUser = { id: 1 } as unknown as UserModel;
+      const body = { name: 'Updated' };
+      await expect(
+        controller.updateUser(currentUser, { id: 1 }, body),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 
@@ -83,11 +94,11 @@ describe('AdminController', () => {
       expect(mockUserService.delete).toHaveBeenCalledWith(1);
     });
 
-    it('should throw BadRequestException if deleting self', async () => {
+    it('should throw ForbiddenException if deleting self', async () => {
       const currentUser = { id: 1 } as unknown as UserModel;
       await expect(
         controller.deleteUser(currentUser, { id: 1 }),
-      ).rejects.toThrow(BadRequestException);
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 });

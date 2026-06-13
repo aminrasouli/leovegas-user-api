@@ -183,9 +183,32 @@ describe('AdminController (e2e)', () => {
         headers: { authorization: `Bearer ${adminToken}` },
       });
 
-      expect(response.statusCode).toBe(400);
-      const body = JSON.parse(response.payload) as { message: string };
-      expect(body.message).toBe('You cannot delete your own account');
+      expect(response.statusCode).toBe(403);
+      const body = JSON.parse(response.payload) as {
+        errors: Array<{ detail: string }>;
+      };
+      expect(body.errors[0].detail).toBe('You cannot delete your own account');
+    });
+
+    it('should not allow admin to update themselves via admin endpoint', async () => {
+      const admin = await prisma.user.findUnique({
+        where: { email: 'admin@example.com' },
+      });
+
+      const response = await app.inject({
+        method: 'PATCH',
+        url: `/admin/users/${admin?.id}`,
+        headers: { authorization: `Bearer ${adminToken}` },
+        payload: { name: 'New Name' },
+      });
+
+      expect(response.statusCode).toBe(403);
+      const body = JSON.parse(response.payload) as {
+        errors: Array<{ detail: string }>;
+      };
+      expect(body.errors[0].detail).toBe(
+        'You cannot update your own account via admin endpoints',
+      );
     });
   });
 });

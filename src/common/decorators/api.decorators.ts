@@ -19,10 +19,12 @@ export function JsonApiResponse<T>(
   options?: {
     api?: Omit<ApiResponseOptions, 'type'>;
     serializer?: Omit<ClassSerializerContextOptions, 'type'>;
+    resource?: string;
   },
 ) {
   const isArray = Array.isArray(dtoClass);
   const classRef: DtoType<T> = isArray ? dtoClass[0] : dtoClass;
+  const resourceType = options?.resource || classRef.name;
 
   let type: DtoType;
 
@@ -39,7 +41,7 @@ export function JsonApiResponse<T>(
     @Expose()
     @ApiProperty()
     @Transform(
-      ({ obj }: { obj: Record<string, unknown> }) => obj?.type || classRef.name,
+      ({ obj }: { obj: Record<string, unknown> }) => obj?.type || resourceType,
     )
     type: string;
 

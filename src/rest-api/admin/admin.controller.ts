@@ -1,8 +1,8 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
@@ -30,7 +30,7 @@ export class AdminController {
   constructor(private readonly userService: UserService) {}
 
   @Get('users')
-  @JsonApiResponse([UserResponseDto])
+  @JsonApiResponse([UserResponseDto], { resource: 'users' })
   async getUsers(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PaginatedResult<UserResponseDto>> {
@@ -38,7 +38,7 @@ export class AdminController {
   }
 
   @Get('users/:id')
-  @JsonApiResponse(UserResponseDto)
+  @JsonApiResponse(UserResponseDto, { resource: 'users' })
   async getUser(
     @Param() params: AdminUserIdParamDto,
   ): Promise<UserResponseDto> {
@@ -46,11 +46,18 @@ export class AdminController {
   }
 
   @Patch('users/:id')
-  @JsonApiResponse(UserResponseDto)
+  @JsonApiResponse(UserResponseDto, { resource: 'users' })
   async updateUser(
+    @User() currentUser: User,
     @Param() params: AdminUserIdParamDto,
     @Body() body: AdminUpdateUserBodyDto,
   ): Promise<UserResponseDto> {
+    if (currentUser.id === params.id) {
+      throw new ForbiddenException(
+        'You cannot update your own account via admin endpoints',
+      );
+    }
+
     return this.userService.update(params.id, body);
   }
 
@@ -61,7 +68,7 @@ export class AdminController {
     @Param() params: AdminUserIdParamDto,
   ): Promise<void> {
     if (currentUser.id === params.id) {
-      throw new BadRequestException('You cannot delete your own account');
+      throw new ForbiddenException('You cannot delete your own account');
     }
 
     await this.userService.delete(params.id);

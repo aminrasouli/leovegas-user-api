@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   type ArgumentsHost,
   Catch,
   type ExceptionFilter,
-  HttpException,
   HttpStatus,
 } from '@nestjs/common';
 
@@ -14,6 +12,7 @@ import {
   PrismaClientUnknownRequestError,
   PrismaClientValidationError,
 } from '@prisma/client/runtime/client';
+import type { FastifyReply } from 'fastify';
 
 enum PrismaError {
   UniqueConstraintFailed = 'P2002',
@@ -68,7 +67,10 @@ const PRISMA_KNOWN_ERROR_MAP: Record<
   PrismaClientValidationError,
 )
 export class PrismaExceptionFilter implements ExceptionFilter {
-  catch(exception: Error, _host: ArgumentsHost) {
+  catch(exception: Error, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<FastifyReply>();
+
     const errorType = exception.constructor.name;
     let { status: statusCode, message } = PRISMA_ERROR_MAP[errorType] || {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -97,14 +99,17 @@ export class PrismaExceptionFilter implements ExceptionFilter {
       }
     }
 
-    throw new HttpException(
-      {
-        statusCode,
-        message,
-        error: 'database_error',
-      },
-      statusCode,
-      { cause: exception, description: errorType },
-    );
+    void response
+      .status(statusCode)
+      .header('Content-Type', 'application/vnd.api+json')
+      .send({
+        errors: [
+          {
+            status: statusCode.toString(),
+            title: 'database_error',
+            detail: message,
+          },
+        ],
+      });
   }
 }

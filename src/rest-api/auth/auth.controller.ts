@@ -11,14 +11,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('sign-up')
-  @JsonApiResponse(SignUpResponseDto)
+  @JsonApiResponse(SignUpResponseDto, { resource: 'users' })
   async signUp(@Body() body: SignUpBodyDto): Promise<SignUpResponseDto> {
     return this.authService.signUp(body);
   }
 
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
-  @JsonApiResponse(SignInResponseDto)
+  @JsonApiResponse(SignInResponseDto, { resource: 'users' })
   async signIn(@Body() body: SignInBodyDto): Promise<SignInResponseDto> {
     return this.authService.signIn(body);
   }

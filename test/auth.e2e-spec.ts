@@ -78,6 +78,10 @@ describe('AuthController (e2e)', () => {
       });
 
       expect(response.statusCode).toBe(409);
+      const body = JSON.parse(response.payload) as {
+        errors: Array<{ detail: string }>;
+      };
+      expect(body.errors[0].detail).toContain('Unique constraint failed');
     });
   });
 
@@ -123,6 +127,10 @@ describe('AuthController (e2e)', () => {
       });
 
       expect(response.statusCode).toBe(401);
+      const body = JSON.parse(response.payload) as {
+        errors: Array<{ detail: string }>;
+      };
+      expect(body.errors[0].detail).toBe('Invalid email or password');
     });
   });
 });
