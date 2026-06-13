@@ -10,18 +10,14 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
+import { UserModel } from 'src/features/user/user.types';
+
 import { AuthGuard } from './auth.guard';
 
-// TODO: Move the error classes to a common file and reuse them across the app.
-type UserPayload = {
-  id: number;
-  email: string;
-};
-
-export type User = UserPayload;
+export type User = UserModel;
 export const User = createParamDecorator(
   (_: unknown, ctx: ExecutionContext) =>
-    ctx.switchToHttp().getRequest<{ user: UserPayload }>().user,
+    ctx.switchToHttp().getRequest<{ user: UserModel }>().user,
 );
 
 export function Auth() {

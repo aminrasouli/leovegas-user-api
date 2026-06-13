@@ -1,21 +1,15 @@
-export type SignUpInput = {
-  email: string;
-  name: string;
-  password: string;
-};
+import type {
+  CreateUserInput,
+  UserModel,
+  ValidateUserInput,
+} from 'src/features/user/user.types';
 
-export type SignUpOutput = {
-  id: number;
-};
+export type SignUpInput = CreateUserInput;
 
-export type SignInInput = {
-  email: string;
-  password: string;
-};
+export type SignUpOutput = Pick<UserModel, 'id'>;
 
-export type SignInOutput = {
-  id: number;
-  email: string;
-  name: string;
+export type SignInInput = ValidateUserInput;
+
+export type SignInOutput = Pick<UserModel, 'id' | 'email' | 'name'> & {
   accessToken: string;
 };
