@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { UserRole } from 'src/features/user/user.constants';
 import { UserService } from 'src/features/user/user.service';
 import { TokenService } from 'src/infrastructure/token/token.service';
 
@@ -9,7 +10,6 @@ import {
   SignUpInput,
   SignUpOutput,
 } from './auth.types';
-import { UserRole } from 'src/features/user/user.constants';
 
 @Injectable()
 export class AuthService {

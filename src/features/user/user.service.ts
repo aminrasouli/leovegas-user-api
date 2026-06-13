@@ -63,13 +63,14 @@ export class UserService {
       id: user.id,
       email: user.email,
       name: user.name,
+      role: user.role,
     };
   }
 
   async findById(id: number): Promise<UserModel | null> {
     return this.prismaService.user.findUnique({
       where: { id },
-      select: { id: true, email: true, name: true },
+      select: { id: true, email: true, name: true, role: true },
     });
   }
 }

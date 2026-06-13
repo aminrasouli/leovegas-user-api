@@ -1,13 +1,12 @@
-import { Expose } from "class-transformer";
-import { UserModel } from "src/features/user/user.types";
+import { Expose } from 'class-transformer';
 
-export class UserResponseDto implements UserModel {
-    @Expose()
-    id: number;
-    
-    @Expose()
-    email: string;
-    
-    @Expose()
-    name: string;
-}   
+export class UserResponseDto {
+  @Expose()
+  id: number;
+
+  @Expose()
+  email: string;
+
+  @Expose()
+  name: string;
+}
