@@ -9,7 +9,6 @@ import { AppCommonModule } from 'src/app-common.module';
 import { ExceptionLoggerFilter } from 'src/common/filters/exception-logger.filter';
 import { JsonApiExceptionFilter } from 'src/common/filters/json-api-exception.filter';
 import { PrismaExceptionFilter } from 'src/common/filters/prisma-exception.filter';
-import { JsonApiInterceptor } from 'src/common/interceptors/json-api.interceptor';
 import { ResponseLoggerInterceptor } from 'src/common/interceptors/response-logger.interceptor';
 import { ContextModule } from 'src/infrastructure/context/context.module';
 import { RestApiModule } from 'src/rest-api/rest-api.module';
@@ -36,7 +35,6 @@ import { RestApiModule } from 'src/rest-api/rest-api.module';
           enableImplicitConversion: true,
         }),
     },
-    { provide: APP_INTERCEPTOR, useClass: JsonApiInterceptor },
   ],
 })
 export class AppModule {}

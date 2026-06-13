@@ -1,5 +1,4 @@
 import {
-  type ArgumentsHost,
   BadRequestException,
   Catch,
   ConflictException,

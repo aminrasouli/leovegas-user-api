@@ -1,7 +1,6 @@
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PageOptionsDto } from 'src/common/dto/page-options.dto';
 import { PrismaService } from 'src/infrastructure/database/prisma.service';
 import { HashService } from 'src/infrastructure/hash/hash.service';
 
@@ -17,9 +16,9 @@ describe('UserService', () => {
       create: jest.fn(),
       update: jest.fn(),
       findUnique: jest.fn(),
+      findMany: jest.fn(),
       delete: jest.fn(),
     },
-    paginate: jest.fn(),
   };
 
   const mockHashService = {
@@ -136,14 +135,13 @@ describe('UserService', () => {
   });
 
   describe('findMany', () => {
-    it('should return paginated users', async () => {
-      const pageOptionsDto = new PageOptionsDto();
-      const paginatedResult = { data: [], meta: {} };
-      mockPrismaService.paginate.mockResolvedValue(paginatedResult);
+    it('should return all users', async () => {
+      const users = [{ id: 1, email: 'test@example.com' }];
+      mockPrismaService.user.findMany.mockResolvedValue(users);
 
-      const result = await service.findMany(pageOptionsDto);
-      expect(mockPrismaService.paginate).toHaveBeenCalled();
-      expect(result).toEqual(paginatedResult);
+      const result = await service.findMany();
+      expect(mockPrismaService.user.findMany).toHaveBeenCalled();
+      expect(result).toEqual(users);
     });
   });
 

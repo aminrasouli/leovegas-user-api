@@ -88,12 +88,9 @@ describe('AdminController (e2e)', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      const body = JSON.parse(response.payload) as {
-        data: unknown[];
-        meta: unknown;
-      };
-      expect(body.data).toHaveLength(2);
-      expect(body.meta).toBeDefined();
+      const body = JSON.parse(response.payload) as any[];
+      expect(body).toHaveLength(2);
+      expect(body[0].data).toBeDefined();
     });
 
     it('should deny regular user access', async () => {

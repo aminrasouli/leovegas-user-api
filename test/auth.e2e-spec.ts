@@ -54,7 +54,7 @@ describe('AuthController (e2e)', () => {
       expect(body.data).toBeDefined();
       expect(body.data.id).toBeDefined();
       expect(response.headers['content-type']).toContain(
-        'application/vnd.api+json',
+        'application/json',
       );
     });
 

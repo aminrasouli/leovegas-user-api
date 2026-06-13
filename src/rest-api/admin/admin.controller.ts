@@ -8,12 +8,9 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Query,
 } from '@nestjs/common';
 
 import { JsonApiResponse } from 'src/common/decorators/api.decorators';
-import { PageOptionsDto } from 'src/common/dto/page-options.dto';
-import { PaginatedResult } from 'src/common/types/pagination.types';
 import { Auth, User } from 'src/features/auth/auth.decorators';
 import { UserRole } from 'src/features/user/user.constants';
 import { UserService } from 'src/features/user/user.service';
@@ -31,10 +28,8 @@ export class AdminController {
 
   @Get('users')
   @JsonApiResponse([UserResponseDto], { resource: 'users' })
-  async getUsers(
-    @Query() pageOptionsDto: PageOptionsDto,
-  ): Promise<PaginatedResult<UserResponseDto>> {
-    return this.userService.findMany(pageOptionsDto);
+  async getUsers(): Promise<UserResponseDto[]> {
+    return this.userService.findMany();
   }
 
   @Get('users/:id')

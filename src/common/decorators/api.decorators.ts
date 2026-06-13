@@ -52,48 +52,6 @@ export function JsonApiResponse<T>(
     attributes: AttributesDto;
   }
 
-  @ApiSchema({ name: `${classRef.name}Links` })
-  class LinksDto {
-    @Expose()
-    @ApiProperty()
-    self: string;
-
-    @Expose()
-    @ApiProperty()
-    first: string;
-
-    @Expose()
-    @ApiProperty({ nullable: true })
-    prev: string | null;
-
-    @Expose()
-    @ApiProperty({ nullable: true })
-    next: string | null;
-
-    @Expose()
-    @ApiProperty()
-    last: string;
-  }
-
-  @ApiSchema({ name: `${classRef.name}Meta` })
-  class MetaDto {
-    @Expose()
-    @ApiProperty()
-    totalItems: number;
-
-    @Expose()
-    @ApiProperty()
-    totalPages: number;
-
-    @Expose()
-    @ApiProperty()
-    pageNumber: number;
-
-    @Expose()
-    @ApiProperty()
-    pageSize: number;
-  }
-
   if (isArray) {
     @ApiSchema({ name: `${classRef.name}ListJsonApi` })
     class JsonApiDto {
@@ -105,18 +63,6 @@ export function JsonApiResponse<T>(
           (obj?.data as DataDto[]) ?? obj,
       )
       data: DataDto[];
-
-      @Expose()
-      @ApiProperty({ type: LinksDto, required: false })
-      @Type(() => LinksDto)
-      @Transform(({ obj }: { obj: Record<string, unknown> }) => obj?.links)
-      links?: LinksDto;
-
-      @Expose()
-      @ApiProperty({ type: MetaDto, required: false })
-      @Type(() => MetaDto)
-      @Transform(({ obj }: { obj: Record<string, unknown> }) => obj?.meta)
-      meta?: MetaDto;
     }
     type = JsonApiDto;
   } else {
@@ -130,12 +76,6 @@ export function JsonApiResponse<T>(
           (obj?.data as DataDto) ?? obj,
       )
       data: DataDto;
-
-      @Expose()
-      @ApiProperty({ type: LinksDto, required: false })
-      @Type(() => LinksDto)
-      @Transform(({ obj }: { obj: Record<string, unknown> }) => obj?.links)
-      links?: LinksDto;
     }
     type = JsonApiDto;
   }

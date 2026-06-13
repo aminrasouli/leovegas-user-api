@@ -4,8 +4,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { PageOptionsDto } from 'src/common/dto/page-options.dto';
-import { PaginatedResult } from 'src/common/types/pagination.types';
 import { PrismaService } from 'src/infrastructure/database/prisma.service';
 import { HashService } from 'src/infrastructure/hash/hash.service';
 
@@ -73,17 +71,11 @@ export class UserService {
     return user;
   }
 
-  async findMany(
-    pageOptionsDto: PageOptionsDto,
-  ): Promise<PaginatedResult<UserModel>> {
-    return this.prismaService.paginate(
-      this.prismaService.user,
-      {
-        omit: { password: true },
-        orderBy: { createdAt: 'desc' },
-      },
-      pageOptionsDto,
-    );
+  async findMany(): Promise<UserModel[]> {
+    return this.prismaService.user.findMany({
+      omit: { password: true },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async delete(id: number): Promise<UserModel> {

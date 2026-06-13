@@ -1,8 +1,6 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PageOptionsDto } from 'src/common/dto/page-options.dto';
-import { PaginatedResult } from 'src/common/types/pagination.types';
 import { AuthGuard } from 'src/features/auth/auth.guard';
 import { RolesGuard } from 'src/features/auth/roles.guard';
 import { UserService } from 'src/features/user/user.service';
@@ -41,15 +39,11 @@ describe('AdminController', () => {
 
   describe('getUsers', () => {
     it('should return a list of users', async () => {
-      const pageOptions = new PageOptionsDto();
-      const result = {
-        data: [],
-        meta: {},
-      } as unknown as PaginatedResult<UserResponseDto>;
+      const result: UserResponseDto[] = [];
       mockUserService.findMany.mockResolvedValue(result);
 
-      expect(await controller.getUsers(pageOptions)).toEqual(result);
-      expect(mockUserService.findMany).toHaveBeenCalledWith(pageOptions);
+      expect(await controller.getUsers()).toEqual(result);
+      expect(mockUserService.findMany).toHaveBeenCalled();
     });
   });
 

@@ -7,22 +7,10 @@ import {
 import { type ConfigType } from '@nestjs/config';
 
 import { PrismaPg } from '@prisma/adapter-pg';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { PageOptionsDto } from 'src/common/dto/page-options.dto';
-import { PaginatedResult } from 'src/common/types/pagination.types';
+import { PrismaClient } from '@prisma/client';
 import { databaseConfigFactory } from 'src/config';
 import { DatabaseProvider } from 'src/config/database.config';
 import { LoggerService } from 'src/infrastructure/logger/logger.service';
-
-interface PrismaDelegate<T, A> {
-  count(args?: { where?: A }): Prisma.PrismaPromise<number>;
-  findMany(args?: {
-    where?: A;
-    skip?: number;
-    take?: number;
-    [key: string]: unknown;
-  }): Prisma.PrismaPromise<T[]>;
-}
 
 @Injectable()
 export class PrismaService
@@ -67,39 +55,5 @@ export class PrismaService
         'Failed to connect to the database. Check logs for more details.',
       );
     }
-  }
-
-  async paginate<T, A>(
-    delegate: PrismaDelegate<T, A>,
-    args: { where?: A; [key: string]: unknown },
-    options: PageOptionsDto,
-  ): Promise<PaginatedResult<T>> {
-    const [totalItems, data] = await this.$transaction([
-      delegate.count({ where: args.where }),
-      delegate.findMany({
-        ...args,
-        skip: options.skip,
-        take: options.limit,
-      }),
-    ]);
-
-    const totalPages = Math.ceil(totalItems / options.limit);
-
-    return {
-      data,
-      links: {
-        self: '',
-        first: '',
-        prev: null,
-        next: null,
-        last: '',
-      },
-      meta: {
-        totalItems,
-        totalPages,
-        pageNumber: options.pageNumber,
-        pageSize: options.limit,
-      },
-    };
   }
 }
