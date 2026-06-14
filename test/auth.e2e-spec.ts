@@ -53,9 +53,7 @@ describe('AuthController (e2e)', () => {
       const body = JSON.parse(response.payload) as { data: { id: string } };
       expect(body.data).toBeDefined();
       expect(body.data.id).toBeDefined();
-      expect(response.headers['content-type']).toContain(
-        'application/json',
-      );
+      expect(response.headers['content-type']).toContain('application/json');
     });
 
     it('should fail if email is already taken', async () => {

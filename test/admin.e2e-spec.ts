@@ -88,7 +88,7 @@ describe('AdminController (e2e)', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      const body = JSON.parse(response.payload) as any[];
+      const body = JSON.parse(response.payload) as Array<{ data: unknown }>;
       expect(body).toHaveLength(2);
       expect(body[0].data).toBeDefined();
     });
