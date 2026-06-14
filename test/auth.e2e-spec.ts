@@ -110,9 +110,9 @@ describe('AuthController (e2e)', () => {
 
       expect(response.statusCode).toBe(200);
       const body = JSON.parse(response.payload) as {
-        data: { attributes: { accessToken: string; email: string } };
+        data: { attributes: { access_token: string; email: string } };
       };
-      expect(body.data.attributes.accessToken).toBeDefined();
+      expect(body.data.attributes.access_token).toBeDefined();
       expect(body.data.attributes.email).toBe(signUpPayload.email);
     });
 

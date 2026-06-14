@@ -15,6 +15,6 @@ export class SignInResponseDto {
   @Expose()
   name: string;
 
-  @Expose()
+  @Expose({ name: 'access_token' })
   accessToken: string;
 }

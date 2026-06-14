@@ -51,9 +51,9 @@ describe('AdminController (e2e)', () => {
       payload: { email: 'admin@example.com', password: 'Password123!' },
     });
     const adminLoginBody = JSON.parse(adminLogin.payload) as {
-      data: { attributes: { accessToken: string } };
+      data: { attributes: { access_token: string } };
     };
-    adminToken = adminLoginBody.data.attributes.accessToken;
+    adminToken = adminLoginBody.data.attributes.access_token;
 
     // Create Regular User
     const user = await userService.create({
@@ -70,9 +70,9 @@ describe('AdminController (e2e)', () => {
       payload: { email: 'user@example.com', password: 'Password123!' },
     });
     const userLoginBody = JSON.parse(userLogin.payload) as {
-      data: { attributes: { accessToken: string } };
+      data: { attributes: { access_token: string } };
     };
-    userToken = userLoginBody.data.attributes.accessToken;
+    userToken = userLoginBody.data.attributes.access_token;
   });
 
   afterAll(async () => {

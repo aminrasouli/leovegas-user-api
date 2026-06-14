@@ -54,9 +54,9 @@ describe('UserController (e2e)', () => {
     });
 
     const body = JSON.parse(loginResponse.payload) as {
-      data: { attributes: { accessToken: string } };
+      data: { attributes: { access_token: string } };
     };
-    authToken = body.data.attributes.accessToken;
+    authToken = body.data.attributes.access_token;
   });
 
   afterAll(async () => {
